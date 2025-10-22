@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - Dreamy Voice</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Dreamy Voice">
+                <span>DREAMY VOICE</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="admin.html" class="active">Админ-панель</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="admin-panel">
+            <div class="container">
+                <h1>Админ-панель</h1>
+                
+                <div class="admin-tabs">
+                    <button class="tab-button active" data-tab="anime-tab">Управление аниме</button>
+                    <button class="tab-button" data-tab="episodes-tab">Управление сериями</button>
+                </div>
+
+                <div id="anime-tab" class="tab-content active">
+                    <h2>Добавить новое аниме</h2>
+                    <form id="add-anime-form" class="admin-form">
+                        <div class="form-group">
+                            <label for="anime-title">Название аниме:</label>
+                            <input type="text" id="anime-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="anime-description">Описание:</label>
+                            <textarea id="anime-description" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="anime-poster">URL постера:</label>
+                            <input type="text" id="anime-poster" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="anime-year">Год выпуска:</label>
+                            <input type="number" id="anime-year" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="anime-genre">Жанр:</label>
+                            <select id="anime-genre" required>
+                                <option value="фэнтези">Фэнтези</option>
+                                <option value="романтика">Романтика</option>
+                                <option value="комедия">Комедия</option>
+                                <option value="экшен">Экшен</option>
+                                <option value="драма">Драма</option>
+                                <option value="научная фантастика">Научная фантастика</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="anime-status">Статус:</label>
+                            <select id="anime-status" required>
+                                <option value="онгоинг">Онгоинг</option>
+                                <option value="завершено">Завершено</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary">Добавить аниме</button>
+                    </form>
+
+                    <h2>Список аниме</h2>
+                    <div id="admin-anime-list" class="admin-list">
+                        <!-- Список аниме для редактирования -->
+                    </div>
+                </div>
+
+                <div id="episodes-tab" class="tab-content">
+                    <h2>Добавить новую серию</h2>
+                    <form id="add-episode-form" class="admin-form">
+                        <div class="form-group">
+                            <label for="episode-anime">Выберите аниме:</label>
+                            <select id="episode-anime" required>
+                                <!-- Список аниме будет загружен через JavaScript -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="episode-number">Номер серии:</label>
+                            <input type="number" id="episode-number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="episode-title">Название серии:</label>
+                            <input type="text" id="episode-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="episode-kodik">Код Kodik:</label>
+                            <input type="text" id="episode-kodik" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Добавить серию</button>
+                    </form>
+
+                    <h2>Список серий</h2>
+                    <div id="admin-episodes-list" class="admin-list">
+                        <!-- Список серий для редактирования -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Dreamy Voice. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
