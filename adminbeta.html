@@ -79,35 +79,37 @@
                     </div>
                 </div>
 
-                <div id="episodes-tab" class="tab-content">
-                    <h2>Добавить новую серию</h2>
-                    <form id="add-episode-form" class="admin-form">
-                        <div class="form-group">
-                            <label for="episode-anime">Выберите аниме:</label>
-                            <select id="episode-anime" required>
-                                <!-- Список аниме будет загружен через JavaScript -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="episode-number">Номер серии:</label>
-                            <input type="number" id="episode-number" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="episode-title">Название серии:</label>
-                            <input type="text" id="episode-title" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="episode-kodik">Код Kodik:</label>
-                            <input type="text" id="episode-kodik" required>
-                        </div>
-                        <button type="submit" class="btn-primary">Добавить серию</button>
-                    </form>
+                <!-- В админ-панели замените форму добавления серии на эту версию: -->
+<div id="episodes-tab" class="tab-content">
+    <h2>Добавить новую серию</h2>
+    <form id="add-episode-form" class="admin-form">
+        <div class="form-group">
+            <label for="episode-anime">Выберите аниме:</label>
+            <select id="episode-anime" required>
+                <!-- Список аниме будет загружен через JavaScript -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="episode-number">Номер серии:</label>
+            <input type="number" id="episode-number" required>
+        </div>
+        <div class="form-group">
+            <label for="episode-title">Название серии:</label>
+            <input type="text" id="episode-title" required>
+        </div>
+        <div class="form-group">
+            <label for="episode-kodik">Ссылка Kodik:</label>
+            <input type="text" id="episode-kodik" required placeholder="https://kodik.info/video/...">
+            <small class="form-help">Вставьте полную ссылку на серию с сайта Kodik</small>
+        </div>
+        <button type="submit" class="btn-primary">Добавить серию</button>
+    </form>
 
-                    <h2>Список серий</h2>
-                    <div id="admin-episodes-list" class="admin-list">
-                        <!-- Список серий для редактирования -->
-                    </div>
-                </div>
+    <h2>Список серий</h2>
+    <div id="admin-episodes-list" class="admin-list">
+        <!-- Список серий для редактирования -->
+    </div>
+</div>
             </div>
         </section>
     </main>
