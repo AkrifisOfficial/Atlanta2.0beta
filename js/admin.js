@@ -94,7 +94,7 @@ function displayAdminEpisodesList(episodesList, animeList) {
             <div>
                 <h3>${animeMap[episode.animeId]} - Серия ${episode.episodeNumber}</h3>
                 <p>${episode.title}</p>
-                <p>Kodik: ${episode.kodikCode}</p>
+                <p class="kodik-link">Ссылка Kodik: ${episode.kodikUrl}</p>
             </div>
             <div class="admin-actions">
                 <button class="btn-edit" onclick="editEpisode(${episode.id})">Редактировать</button>
@@ -102,6 +102,28 @@ function displayAdminEpisodesList(episodesList, animeList) {
             </div>
         </div>
     `).join('');
+}
+
+// Извлечение кода Kodik из ссылки
+function extractKodikCode(url) {
+    // Разные форматы ссылок Kodik
+    const patterns = [
+        /kodik\.\w+\/video\/([a-zA-Z0-9]+)/, // kodik.info/video/CODE
+        /kodik\.\w+\/seria\/([a-zA-Z0-9]+)/, // kodik.info/seria/CODE
+        /kodik\.\w+\/embed\/([a-zA-Z0-9]+)/, // kodik.info/embed/CODE
+        /\/video\/([a-zA-Z0-9]+)/, // /video/CODE
+        /\/seria\/([a-zA-Z0-9]+)/, // /seria/CODE
+        /\/embed\/([a-zA-Z0-9]+)/  // /embed/CODE
+    ];
+    
+    for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) {
+            return match[1];
+        }
+    }
+    
+    return null;
 }
 
 // Обработка формы добавления аниме
@@ -129,12 +151,26 @@ document.getElementById('add-episode-form').addEventListener('submit', function(
     const animeId = document.getElementById('episode-anime').value;
     const episodeNumber = document.getElementById('episode-number').value;
     const title = document.getElementById('episode-title').value;
-    const kodikCode = document.getElementById('episode-kodik').value;
+    const kodikUrl = document.getElementById('episode-kodik').value;
+    
+    // Извлекаем код Kodik из ссылки
+    const kodikCode = extractKodikCode(kodikUrl);
+    
+    if (!kodikCode) {
+        alert('Не удалось извлечь код Kodik из ссылки. Проверьте формат ссылки.');
+        return;
+    }
     
     // В реальном проекте здесь будет отправка данных на GitHub API
-    console.log('Добавление серии:', { animeId, episodeNumber, title, kodikCode });
+    console.log('Добавление серии:', { 
+        animeId, 
+        episodeNumber, 
+        title, 
+        kodikUrl,
+        kodikCode 
+    });
     
-    alert('Серия добавлена! В реальном проекте данные будут сохранены в репозитории GitHub.');
+    alert(`Серия добавлена! Код Kodik: ${kodikCode}`);
     this.reset();
 });
 
