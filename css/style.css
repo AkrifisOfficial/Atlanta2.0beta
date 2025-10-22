@@ -1,0 +1,317 @@
+/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #0f0f1a;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Шапка */
+header {
+    background-color: #1a1a2e;
+    padding: 15px 0;
+    border-bottom: 2px solid #2d2d4d;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 24px;
+    color: #8a2be2;
+}
+
+.logo img {
+    height: 40px;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover, nav a.active {
+    background-color: #8a2be2;
+}
+
+/* Герой-секция */
+.hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d4d 100%);
+    padding: 60px 0;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: #8a2be2;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #cccccc;
+}
+
+/* Секция списка аниме */
+.anime-list h2 {
+    margin-bottom: 20px;
+    color: #8a2be2;
+}
+
+.filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.filters input, .filters select {
+    padding: 10px 15px;
+    border: 1px solid #2d2d4d;
+    border-radius: 4px;
+    background-color: #1a1a2e;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.anime-card {
+    background-color: #1a1a2e;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.anime-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3);
+}
+
+.anime-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.anime-card-content {
+    padding: 15px;
+}
+
+.anime-card h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.anime-card .tags {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.tag {
+    background-color: #2d2d4d;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+/* Секция деталей аниме */
+.anime-info {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.anime-poster {
+    flex: 0 0 300px;
+}
+
+.anime-poster img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.anime-meta {
+    flex: 1;
+}
+
+.anime-meta h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #8a2be2;
+}
+
+.anime-tags {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.anime-description {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.voice-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.voice-badge {
+    background-color: #8a2be2;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.checkmarks {
+    font-size: 18px;
+}
+
+/* Секция серий */
+.episodes-section h2 {
+    margin-bottom: 20px;
+    color: #8a2be2;
+}
+
+.episodes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.episode-card {
+    background-color: #1a1a2e;
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.episode-card:hover {
+    background-color: #2d2d4d;
+}
+
+.episode-card h3 {
+    margin-bottom: 5px;
+}
+
+.episode-number {
+    color: #8a2be2;
+    font-weight: bold;
+}
+
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background-color: #1a1a2e;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+}
+
+.close {
+    color: #ffffff;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #8a2be2;
+}
+
+.player-container {
+    margin-top: 20px;
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 соотношение */
+    height: 0;
+    overflow: hidden;
+}
+
+#kodik-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Подвал */
+footer {
+    background-color: #1a1a2e;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 40px;
+    border-top: 1px solid #2d2d4d;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .anime-info {
+        flex-direction: column;
+    }
+    
+    .anime-poster {
+        flex: 0 0 auto;
+        margin-bottom: 20px;
+    }
+    
+    .hero h1 {
+        font-size: 28px;
+    }
+    
+    .filters {
+        flex-direction: column;
+    }
+}
