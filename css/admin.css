@@ -114,3 +114,17 @@
     background-color: #ff4d4d;
     color: #ffffff;
 }
+/* Дополнительные стили для админ-панели */
+.form-help {
+    color: #888;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.kodik-link {
+    font-size: 12px;
+    color: #8a2be2;
+    word-break: break-all;
+    margin-top: 5px;
+}
