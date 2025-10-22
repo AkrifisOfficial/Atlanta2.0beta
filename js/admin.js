@@ -1,5 +1,142 @@
 // JavaScript для админ-панели
 
+// Конфигурация GitHub
+let githubConfig = {
+    token: '',
+    repo: 'dreamy-voice/data',
+    branch: 'main'
+};
+
+// Загрузка конфигурации из localStorage
+function loadConfig() {
+    const savedConfig = localStorage.getItem('githubConfig');
+    if (savedConfig) {
+        githubConfig = { ...githubConfig, ...JSON.parse(savedConfig) };
+        document.getElementById('github-token').value = githubConfig.token;
+        document.getElementById('github-repo').value = githubConfig.repo;
+        document.getElementById('github-branch').value = githubConfig.branch;
+    }
+}
+
+// Сохранение конфигурации в localStorage
+function saveConfig() {
+    githubConfig.token = document.getElementById('github-token').value;
+    githubConfig.repo = document.getElementById('github-repo').value;
+    githubConfig.branch = document.getElementById('github-branch').value;
+    
+    localStorage.setItem('githubConfig', JSON.stringify(githubConfig));
+    showStatus('Настройки сохранены!', 'success');
+}
+
+// Показать статус
+function showStatus(message, type = 'info') {
+    const statusElement = document.getElementById('connection-status');
+    statusElement.textContent = message;
+    statusElement.className = `status-message ${type}`;
+    
+    setTimeout(() => {
+        statusElement.textContent = '';
+        statusElement.className = 'status-message';
+    }, 5000);
+}
+
+// Проверка подключения к GitHub
+async function testGitHubConnection() {
+    if (!githubConfig.token) {
+        showStatus('Введите GitHub токен', 'error');
+        return;
+    }
+    
+    try {
+        showStatus('Проверка подключения...', 'info');
+        
+        const response = await fetch(`https://api.github.com/repos/${githubConfig.repo}`, {
+            headers: {
+                'Authorization': `token ${githubConfig.token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        if (response.ok) {
+            const repoData = await response.json();
+            showStatus(`Подключение успешно! Репозиторий: ${repoData.name}`, 'success');
+        } else {
+            showStatus('Ошибка подключения. Проверьте токен и название репозитория', 'error');
+        }
+    } catch (error) {
+        showStatus('Ошибка сети: ' + error.message, 'error');
+    }
+}
+
+// Загрузка данных из GitHub
+async function loadDataFromGitHub(filePath) {
+    if (!githubConfig.token) {
+        throw new Error('GitHub токен не настроен');
+    }
+    
+    const url = `https://raw.githubusercontent.com/${githubConfig.repo}/${githubConfig.branch}/${filePath}`;
+    
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': `token ${githubConfig.token}`,
+            'Accept': 'application/vnd.github.v3.raw'
+        }
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Ошибка загрузки: ${response.status} ${response.statusText}`);
+    }
+    
+    return await response.json();
+}
+
+// Сохранение данных в GitHub
+async function saveDataToGitHub(filePath, data, commitMessage) {
+    if (!githubConfig.token) {
+        throw new Error('GitHub токен не настроен');
+    }
+    
+    // Сначала получаем текущий SHA файла (если существует)
+    let sha = null;
+    try {
+        const fileResponse = await fetch(`https://api.github.com/repos/${githubConfig.repo}/contents/${filePath}`, {
+            headers: {
+                'Authorization': `token ${githubConfig.token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        if (fileResponse.ok) {
+            const fileData = await fileResponse.json();
+            sha = fileData.sha;
+        }
+    } catch (error) {
+        // Файл не существует, это нормально
+    }
+    
+    // Сохраняем файл
+    const response = await fetch(`https://api.github.com/repos/${githubConfig.repo}/contents/${filePath}`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `token ${githubConfig.token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            message: commitMessage,
+            content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+            branch: githubConfig.branch,
+            sha: sha
+        })
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Ошибка сохранения: ${response.status} ${response.statusText}`);
+    }
+    
+    return await response.json();
+}
+
 // Переключение вкладок
 function setupTabs() {
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -23,18 +160,41 @@ function setupTabs() {
 // Загрузка данных для админ-панели
 async function loadAdminData() {
     try {
-        // В реальном проекте здесь будут запросы к GitHub API
-        const animeResponse = await fetch('data/anime.json');
-        const animeData = await animeResponse.json();
+        let animeData = [];
+        let episodesData = [];
         
-        const episodesResponse = await fetch('data/episodes.json');
-        const episodesData = await episodesResponse.json();
+        // Пытаемся загрузить из GitHub
+        if (githubConfig.token) {
+            try {
+                animeData = await loadDataFromGitHub('data/anime.json');
+                episodesData = await loadDataFromGitHub('data/episodes.json');
+                showStatus('Данные загружены из GitHub', 'success');
+            } catch (error) {
+                console.warn('Не удалось загрузить из GitHub:', error.message);
+                // Загружаем локальные данные
+                const animeResponse = await fetch('data/anime.json');
+                animeData = await animeResponse.json();
+                
+                const episodesResponse = await fetch('data/episodes.json');
+                episodesData = await episodesResponse.json();
+                showStatus('Используются локальные данные', 'warning');
+            }
+        } else {
+            // Загружаем локальные данные
+            const animeResponse = await fetch('data/anime.json');
+            animeData = await animeResponse.json();
+            
+            const episodesResponse = await fetch('data/episodes.json');
+            episodesData = await episodesResponse.json();
+            showStatus('GitHub токен не настроен. Используются локальные данные', 'warning');
+        }
         
         populateAnimeSelect(animeData);
         displayAdminAnimeList(animeData);
         displayAdminEpisodesList(episodesData, animeData);
     } catch (error) {
         console.error('Ошибка загрузки данных:', error);
+        showStatus('Ошибка загрузки данных: ' + error.message, 'error');
     }
 }
 
@@ -127,7 +287,7 @@ function extractKodikCode(url) {
 }
 
 // Обработка формы добавления аниме
-document.getElementById('add-anime-form').addEventListener('submit', function(e) {
+document.getElementById('add-anime-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const title = document.getElementById('anime-title').value;
@@ -137,15 +297,43 @@ document.getElementById('add-anime-form').addEventListener('submit', function(e)
     const genre = document.getElementById('anime-genre').value;
     const status = document.getElementById('anime-status').value;
     
-    // В реальном проекте здесь будет отправка данных на GitHub API
-    console.log('Добавление аниме:', { title, description, poster, year, genre, status });
+    const newAnime = {
+        id: Date.now(), // Простой способ генерации ID
+        title,
+        description,
+        poster,
+        year: parseInt(year),
+        genre,
+        status
+    };
     
-    alert('Аниме добавлено! В реальном проекте данные будут сохранены в репозитории GitHub.');
-    this.reset();
+    try {
+        // Загружаем текущие данные
+        let animeData = [];
+        try {
+            animeData = await loadDataFromGitHub('data/anime.json');
+        } catch (error) {
+            // Если файла нет, начинаем с пустого массива
+            animeData = [];
+        }
+        
+        // Добавляем новое аниме
+        animeData.push(newAnime);
+        
+        // Сохраняем в GitHub
+        await saveDataToGitHub('data/anime.json', animeData, `Добавлено аниме: ${title}`);
+        
+        showStatus(`Аниме "${title}" добавлено!`, 'success');
+        this.reset();
+        loadAdminData(); // Перезагружаем данные
+    } catch (error) {
+        console.error('Ошибка сохранения:', error);
+        showStatus('Ошибка сохранения: ' + error.message, 'error');
+    }
 });
 
 // Обработка формы добавления серии
-document.getElementById('add-episode-form').addEventListener('submit', function(e) {
+document.getElementById('add-episode-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const animeId = document.getElementById('episode-anime').value;
@@ -157,21 +345,42 @@ document.getElementById('add-episode-form').addEventListener('submit', function(
     const kodikCode = extractKodikCode(kodikUrl);
     
     if (!kodikCode) {
-        alert('Не удалось извлечь код Kodik из ссылки. Проверьте формат ссылки.');
+        showStatus('Не удалось извлечь код Kodik из ссылки. Проверьте формат ссылки.', 'error');
         return;
     }
     
-    // В реальном проекте здесь будет отправка данных на GitHub API
-    console.log('Добавление серии:', { 
-        animeId, 
-        episodeNumber, 
-        title, 
+    const newEpisode = {
+        id: Date.now(),
+        animeId: parseInt(animeId),
+        episodeNumber: parseInt(episodeNumber),
+        title,
         kodikUrl,
-        kodikCode 
-    });
+        kodikCode
+    };
     
-    alert(`Серия добавлена! Код Kodik: ${kodikCode}`);
-    this.reset();
+    try {
+        // Загружаем текущие данные
+        let episodesData = [];
+        try {
+            episodesData = await loadDataFromGitHub('data/episodes.json');
+        } catch (error) {
+            // Если файла нет, начинаем с пустого массива
+            episodesData = [];
+        }
+        
+        // Добавляем новую серию
+        episodesData.push(newEpisode);
+        
+        // Сохраняем в GitHub
+        await saveDataToGitHub('data/episodes.json', episodesData, `Добавлена серия: ${title}`);
+        
+        showStatus(`Серия "${title}" добавлена! Код Kodik: ${kodikCode}`, 'success');
+        this.reset();
+        loadAdminData(); // Перезагружаем данные
+    } catch (error) {
+        console.error('Ошибка сохранения:', error);
+        showStatus('Ошибка сохранения: ' + error.message, 'error');
+    }
 });
 
 // Функции редактирования и удаления (заглушки)
@@ -179,9 +388,24 @@ function editAnime(id) {
     alert(`Редактирование аниме с ID: ${id}`);
 }
 
-function deleteAnime(id) {
+async function deleteAnime(id) {
     if (confirm('Вы уверены, что хотите удалить это аниме?')) {
-        alert(`Удаление аниме с ID: ${id}`);
+        try {
+            // Загружаем текущие данные
+            const animeData = await loadDataFromGitHub('data/anime.json');
+            
+            // Удаляем аниме
+            const updatedData = animeData.filter(anime => anime.id !== id);
+            
+            // Сохраняем в GitHub
+            await saveDataToGitHub('data/anime.json', updatedData, `Удалено аниме с ID: ${id}`);
+            
+            showStatus('Аниме удалено!', 'success');
+            loadAdminData(); // Перезагружаем данные
+        } catch (error) {
+            console.error('Ошибка удаления:', error);
+            showStatus('Ошибка удаления: ' + error.message, 'error');
+        }
     }
 }
 
@@ -189,14 +413,39 @@ function editEpisode(id) {
     alert(`Редактирование серии с ID: ${id}`);
 }
 
-function deleteEpisode(id) {
+async function deleteEpisode(id) {
     if (confirm('Вы уверены, что хотите удалить эту серию?')) {
-        alert(`Удаление серии с ID: ${id}`);
+        try {
+            // Загружаем текущие данные
+            const episodesData = await loadDataFromGitHub('data/episodes.json');
+            
+            // Удаляем серию
+            const updatedData = episodesData.filter(episode => episode.id !== id);
+            
+            // Сохраняем в GitHub
+            await saveDataToGitHub('data/episodes.json', updatedData, `Удалена серия с ID: ${id}`);
+            
+            showStatus('Серия удалена!', 'success');
+            loadAdminData(); // Перезагружаем данные
+        } catch (error) {
+            console.error('Ошибка удаления:', error);
+            showStatus('Ошибка удаления: ' + error.message, 'error');
+        }
     }
 }
 
 // Инициализация админ-панели
 document.addEventListener('DOMContentLoaded', function() {
+    // Загружаем конфигурацию
+    loadConfig();
+    
+    // Настройка вкладок
     setupTabs();
+    
+    // Загрузка данных
     loadAdminData();
+    
+    // Обработчики для кнопок настроек
+    document.getElementById('save-settings').addEventListener('click', saveConfig);
+    document.getElementById('test-connection').addEventListener('click', testGitHubConnection);
 });
