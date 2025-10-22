@@ -1,0 +1,116 @@
+/* Стили для админ-панели */
+.admin-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #2d2d4d;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    color: #ffffff;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.tab-button.active {
+    border-bottom: 2px solid #8a2be2;
+    color: #8a2be2;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.admin-form {
+    background-color: #1a1a2e;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #2d2d4d;
+    border-radius: 4px;
+    background-color: #0f0f1a;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.btn-primary {
+    background-color: #8a2be2;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #6a1cb2;
+}
+
+.admin-list {
+    background-color: #1a1a2e;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.admin-item {
+    padding: 15px;
+    border-bottom: 1px solid #2d2d4d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-item:last-child {
+    border-bottom: none;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit, .btn-delete {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-edit {
+    background-color: #2d2d4d;
+    color: #ffffff;
+}
+
+.btn-delete {
+    background-color: #ff4d4d;
+    color: #ffffff;
+}
