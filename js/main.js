@@ -1,12 +1,38 @@
 // Основной JavaScript для главной страницы
 
-// Загрузка данных аниме
+// В js/main.js и js/anime.js замените функцию loadAnime на:
+
 async function loadAnime() {
     try {
-        // В реальном проекте здесь будет запрос к GitHub API
-        // Для демонстрации используем локальные данные
-        const response = await fetch('data/anime.json');
-        const animeData = await response.json();
+        // Пытаемся загрузить из GitHub, если настроен токен
+        let animeData = [];
+        const githubConfig = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+        
+        if (githubConfig.token) {
+            try {
+                const response = await fetch(`https://raw.githubusercontent.com/${githubConfig.repo}/${githubConfig.branch}/data/anime.json`, {
+                    headers: {
+                        'Authorization': `token ${githubConfig.token}`,
+                        'Accept': 'application/vnd.github.v3.raw'
+                    }
+                });
+                
+                if (response.ok) {
+                    animeData = await response.json();
+                } else {
+                    throw new Error('GitHub load failed');
+                }
+            } catch (error) {
+                // Если не удалось загрузить из GitHub, используем локальные данные
+                const localResponse = await fetch('data/anime.json');
+                animeData = await localResponse.json();
+            }
+        } else {
+            // Используем локальные данные
+            const localResponse = await fetch('data/anime.json');
+            animeData = await localResponse.json();
+        }
+        
         displayAnime(animeData);
         setupFilters(animeData);
     } catch (error) {
