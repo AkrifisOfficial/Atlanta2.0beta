@@ -315,3 +315,87 @@ footer {
         flex-direction: column;
     }
 }
+/* Дополнительные стили для лучшего отображения ошибок */
+.github-settings {
+    background-color: #1a1a2e;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid #2d2d4d;
+}
+
+.settings-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.settings-form .form-group {
+    margin-bottom: 15px;
+}
+
+.settings-form .btn-primary,
+.settings-form .btn-secondary {
+    grid-column: span 1;
+    margin-top: 10px;
+}
+
+.status-message {
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 15px;
+    font-weight: bold;
+    border: 1px solid;
+}
+
+.status-message.success {
+    background-color: rgba(46, 125, 50, 0.2);
+    color: #4caf50;
+    border-color: #4caf50;
+}
+
+.status-message.error {
+    background-color: rgba(198, 40, 40, 0.2);
+    color: #f44336;
+    border-color: #f44336;
+}
+
+.status-message.warning {
+    background-color: rgba(249, 168, 37, 0.2);
+    color: #ff9800;
+    border-color: #ff9800;
+}
+
+.status-message.info {
+    background-color: rgba(2, 119, 189, 0.2);
+    color: #2196f3;
+    border-color: #2196f3;
+}
+
+.form-help {
+    color: #888;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.form-help a {
+    color: #8a2be2;
+    text-decoration: none;
+}
+
+.form-help a:hover {
+    text-decoration: underline;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .settings-form {
+        grid-template-columns: 1fr;
+    }
+    
+    .settings-form .btn-primary,
+    .settings-form .btn-secondary {
+        grid-column: span 1;
+    }
+}
