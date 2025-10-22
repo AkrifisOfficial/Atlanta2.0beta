@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аниме - Dreamy Voice</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Dreamy Voice">
+                <span>DREAMY VOICE</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="admin.html">Админ-панель</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="anime-details">
+            <div class="container">
+                <div class="anime-info">
+                    <div class="anime-poster">
+                        <img id="anime-poster" src="" alt="Постер аниме">
+                    </div>
+                    <div class="anime-meta">
+                        <h1 id="anime-title"></h1>
+                        <div class="anime-tags">
+                            <span class="tag" id="anime-year"></span>
+                            <span class="tag" id="anime-genre"></span>
+                            <span class="tag" id="anime-status"></span>
+                        </div>
+                        <p id="anime-description" class="anime-description"></p>
+                        <div class="voice-info">
+                            <span class="voice-badge">ОЗВУЧКА DREAMY VOICE</span>
+                            <span class="checkmarks">✔️ ✔️ ✔️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="episodes-section">
+                    <h2>Серии</h2>
+                    <div id="episodes-list" class="episodes-grid">
+                        <!-- Список серий будет загружен через JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Модальное окно для просмотра серии -->
+    <div id="episode-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="player-container">
+                <div id="kodik-player"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Dreamy Voice. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="js/anime.js"></script>
+</body>
+              </html>
