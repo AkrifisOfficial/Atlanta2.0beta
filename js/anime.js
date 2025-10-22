@@ -95,11 +95,12 @@ function openEpisodeModal(kodikCode) {
     const modal = document.getElementById('episode-modal');
     const playerContainer = document.getElementById('kodik-player');
     
-    // В реальном проекте здесь будет код для встраивания плеера Kodik
+    // Создаем iframe с плеером Kodik
     playerContainer.innerHTML = `
-        <iframe src="https://kodik.info/seria/${kodikCode}" 
+        <iframe src="https://kodik.info/embed/${kodikCode}?domain=yourdomain.com&min_age=18" 
                 frameborder="0" 
-                allowfullscreen></iframe>
+                allowfullscreen 
+                style="width: 100%; height: 100%;"></iframe>
     `;
     
     modal.style.display = 'block';
