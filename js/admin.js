@@ -2,7 +2,7 @@
 
 // Конфигурация GitHub
 let githubConfig = {
-    token: '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',
+    token: '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',
     repo: 'Storage-Dreamy-Voice/data',
     branch: 'main'
 };
